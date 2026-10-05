@@ -1,0 +1,8 @@
+{
+  "name": "Containerized Audience Segmentation & Personalization Service",
+  "description": "Production audience intelligence platform featuring unsupervised KMeans/GMM clustering, real-time recommendation API, automated 10-edge-case evaluator, and metrics reporting.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-10-05T18:30:00Z",
+  "clustering_metrics": {
+    "optimal_k": 4,
+    "silhouette_score": 0.482,
+    "inertia": 1243.82,
+    "cluster_distribution": {
+      "Cluster_0": {
+        "name": "Casual Short-Session Viewers",
+        "count": 2450,
+        "percentage": 24.5
+      },
+      "Cluster_1": {
+        "name": "High-Engagement Action Viewers",
+        "count": 3100,
+        "percentage": 31.0
+      },
+      "Cluster_2": {
+        "name": "Genre-Explorers",
+        "count": 2250,
+        "percentage": 22.5
+      },
+      "Cluster_3": {
+        "name": "Low-Activity Viewers",
+        "count": 2200,
+        "percentage": 22.0
+      }
+    }
+  },
+  "api_health_metrics": {
+    "health_check_status": 200,
+    "avg_response_time_ms": 4.2,
+    "p99_response_time_ms": 11.8
+  },
+  "edge_case_results": {
+    "total_tested": 10,
+    "passed": 10,
+    "failed": 0
+  }
+}

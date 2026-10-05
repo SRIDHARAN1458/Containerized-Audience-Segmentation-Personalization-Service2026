@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackathon Problem Statement Analysis - Containerized Audience Segmentation & Personalization Service</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --primary: #1e3a8a;
+    --primary-light: #3b82f6;
+    --primary-bg: #eff6ff;
+    --dark: #0f172a;
+    --text: #334155;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --card-bg: #ffffff;
+    --accent: #0ea5e9;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --code-bg: #1e293b;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    background-color: #f8fafc;
+    line-height: 1.6;
+    font-size: 13.5px;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 18mm 14mm 18mm 14mm;
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-size: 9px;
+      color: #94a3b8;
+      font-family: 'Inter', sans-serif;
+    }
+    @bottom-left {
+      content: "Hack Arena - Audience Segmentation Problem Statement Analysis";
+      font-size: 9px;
+      color: #94a3b8;
+      font-family: 'Inter', sans-serif;
+    }
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 40px 48px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Cover Banner */
+  .header-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
+    color: white;
+    padding: 32px 36px;
+    border-radius: 12px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-card::after {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+  }
+
+  .badge-tag {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    color: #93c5fd;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+
+  .header-title {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .header-subtitle {
+    font-size: 13px;
+    color: #cbd5e1;
+    max-width: 680px;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .meta-item {
+    font-size: 11px;
+  }
+  .meta-label {
+    color: #93c5fd;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .meta-val {
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  /* Section Styling */
+  h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 28px 0 12px 0;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 18px 0 8px 0;
+  }
+
+  p {
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  ul, ol {
+    margin-bottom: 12px;
+    padding-left: 20px;
+  }
+
+  li {
+    margin-bottom: 5px;
+  }
+
+  /* Grid Layouts */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .card {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .card-highlight {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 20px 0;
+    font-size: 12px;
+  }
+
+  th {
+    background: #f1f5f9;
+    color: var(--dark);
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+  }
+
+  td {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  tr:nth-child(even) {
+    background: #fafafa;
+  }
+
+  /* Code & Syntax */
+  code {
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 11.5px;
+    background: #f1f5f9;
+    color: #b91c1c;
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+
+  pre {
+    background: var(--code-bg);
+    color: #e2e8f0;
+    padding: 14px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    overflow-x: auto;
+    margin: 12px 0 16px 0;
+    line-height: 1.5;
+  }
+
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+  }
+
+  /* Callout Boxes */
+  .callout {
+    border-left: 4px solid var(--primary-light);
+    background: var(--primary-bg);
+    padding: 12px 16px;
+    border-radius: 0 6px 6px 0;
+    margin: 14px 0;
+  }
+
+  .callout-warning {
+    border-left-color: var(--warning);
+    background: #fffbeb;
+  }
+
+  .callout-danger {
+    border-left-color: var(--danger);
+    background: #fef2f2;
+  }
+
+  .callout-title {
+    font-weight: 700;
+    font-size: 12.5px;
+    margin-bottom: 4px;
+  }
+
+  /* Badges */
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+  .tag-blue { background: #dbeafe; color: #1e40af; }
+  .tag-green { background: #d1fae5; color: #065f46; }
+  .tag-red { background: #fee2e2; color: #991b1b; }
+  .tag-amber { background: #fef3c7; color: #92400e; }
+
+  /* Print Specifics */
+  @media print {
+    body {
+      background: white;
+    }
+    .container {
+      padding: 0;
+      box-shadow: none;
+      max-width: 100%;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+    .no-break {
+      break-inside: avoid;
+    }
+    .no-print {
+      display: none;
+    }
+  }
+
+  .print-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    z-index: 100;
+  }
+  .print-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">
+  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2m-12 0v4h12v-4M8 14h8"/></svg>
+  Save / Print as PDF
+</button>
+
+<div class="container">
+
+  <!-- Header Banner -->
+  <div class="header-card">
+    <div class="badge-tag">HACK ARENA • PROBLEM ANALYSIS & EXECUTION BLUEPRINT</div>
+    <h1 class="header-title">Containerized Audience Segmentation & Personalization Service</h1>
+    <div class="header-subtitle">
+      Comprehensive End-to-End Analysis, Architectural Specification, Evaluation Standards, Edge-Case Matrix, and Ready-to-Deploy GitHub Repository Blueprint.
+    </div>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="meta-label">Duration</div>
+        <div class="meta-val">2h 30m Build + 30m Report</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Total Marks</div>
+        <div class="meta-val">100 Marks</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Target Architecture</div>
+        <div class="meta-val">Docker 3-Microservices</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Core Algorithm</div>
+        <div class="meta-val">Unsupervised KMeans / GMM</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 1: Executive Summary & Problem Decomposition -->
+  <h2>1. Executive Summary & Core Challenge</h2>
+  <p>
+    Modern OTT streaming platforms log millions of user interactions (watch time, session durations, genre preference distribution, completion rates).
+    Raw logs cannot directly inform personalization rules. The objective is to build a <strong>lightweight, deterministic, containerized audience intelligence service</strong> that transforms tabular viewer logs into defensible behavioral clusters, exposes them via a production-grade REST API, and evaluates the entire lifecycle automatically.
+  </p>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Business Objective <span class="tag tag-blue">Why it matters</span></div>
+      <p style="font-size: 12px; margin: 0;">
+        Replace generic one-size-fits-all recommendations with automated behavioral cohorts (e.g., distinguishing intense binge-watchers from casual short-form viewers and weekend binge explorers) to drive viewer retention and platform engagement.
+      </p>
+    </div>
+    <div class="card">
+      <div class="card-title">Engineering Goal <span class="tag tag-green">Deliverable</span></div>
+      <p style="font-size: 12px; margin: 0;">
+        A turnkey, one-command (<code>docker compose up --build</code>) system connecting three microservices (<code>trainer</code>, <code>api</code>, <code>evaluator</code>) through shared Docker storage volumes, with deterministic seeding and independent evaluation.
+      </p>
+    </div>
+  </div>
+
+  <div class="callout callout-warning no-break">
+    <div class="callout-title">⚠️ Non-Negotiable Core Principle & Constraints</div>
+    <p style="margin: 0; font-size: 12px;">
+      <strong>Build the smallest system that proves the complete idea.</strong> Do NOT use LLMs (OpenAI, Claude, etc.), heavy transformers, or paid cloud APIs. No Jupyter notebook-only submissions. Do NOT retrain during inference. The core clustering task must remain purely <strong>unsupervised</strong> (do not invent pseudo-labels).
+    </p>
+  </div>
+
+  <!-- Section 2: Architecture & Service Breakdown -->
+  <h2>2. 3-Service Microservice Architecture</h2>
+  <p>The system is strictly decoupled into three services communicating via volumes and HTTP networks:</p>
+
+  <div class="grid-3 no-break">
+    <div class="card card-highlight">
+      <div class="card-title">1. Trainer Service <span class="tag tag-amber">Runs First</span></div>
+      <ul style="font-size: 11.5px; padding-left: 15px; margin: 0;">
+        <li>Loads <code>user_activity.csv</code></li>
+        <li>Sanitizes & scales features</li>
+        <li>Computes optimal K (Elbow/Silhouette)</li>
+        <li>Fits KMeans/GMM deterministically</li>
+        <li>Maps centroids to human labels</li>
+        <li>Saves pipeline to <code>/models/model.pkl</code></li>
+        <li>Exits cleanly with exit code 0</li>
+      </ul>
+    </div>
+    <div class="card card-highlight">
+      <div class="card-title">2. API Service <span class="tag tag-green">Long Running</span></div>
+      <ul style="font-size: 11.5px; padding-left: 15px; margin: 0;">
+        <li>FastAPI running via Uvicorn</li>
+        <li>Loads model artifact into memory once</li>
+        <li>Exposes <code>GET /health</code> with readiness</li>
+        <li>Exposes <code>POST /recommend</code></li>
+        <li>Strict Pydantic input validation</li>
+        <li>Returns segment, distance & recs</li>
+        <li>Monitored by Docker healthcheck</li>
+      </ul>
+    </div>
+    <div class="card card-highlight">
+      <div class="card-title">3. Evaluator Service <span class="tag tag-blue">Automated Verification</span></div>
+      <ul style="font-size: 11.5px; padding-left: 15px; margin: 0;">
+        <li>Waits until API is <code>healthy</code></li>
+        <li>Submits standard test profiles</li>
+        <li>Executes 10 required edge cases</li>
+        <li>Calculates cluster stability & metrics</li>
+        <li>Generates <code>metrics.json</code></li>
+        <li>Logs complete verification report</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Data Flow Chart -->
+  <div class="card no-break" style="background: #1e293b; color: #f8fafc; padding: 14px;">
+    <div style="font-weight: 700; font-size: 11px; text-transform: uppercase; color: #38bdf8; margin-bottom: 6px;">
+      SYSTEM DATA & LIFECYCLE FLOW
+    </div>
+    <pre style="margin: 0; padding: 0; background: transparent; color: #94a3b8; font-size: 11px;">
+[Raw Tabular Dataset] ──> [Trainer Service]
+                                │ (StandardScaler + KMeans + Segment Profiler)
+                                ▼
+                     [Shared Volume: /models]
+                                │ (clustering_pipeline.joblib + metadata.json)
+                                ▼
+                        [API Service] <── (GET /health Polling) ───┐
+                                │                                   │
+                     (POST /recommend API)                          │
+                                │                                   │
+                                ▼                                   │
+                     [Evaluator Service] ───────────────────────────┘
+                                │ (Executes 10 Edge Cases + Calculates Quality)
+                                ▼
+                     [Artifact: metrics.json]
+    </pre>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- Section 3: Machine Learning & Feature Engineering Pipeline -->
+  <h2>3. Machine Learning & Behavioral Feature Engineering</h2>
+  
+  <h3>Feature Selection Matrix</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Feature Category</th>
+        <th style="width: 35%;">Raw Input / Extracted Feature</th>
+        <th style="width: 40%;">Transformation & Behavioral Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Engagement</strong></td>
+        <td><code>watch_time_hours</code>, <code>total_sessions</code></td>
+        <td>Log-scale or <code>StandardScaler</code>. Distinguishes power binge-viewers from low-touch viewers.</td>
+      </tr>
+      <tr>
+        <td><strong>Session Dynamics</strong></td>
+        <td><code>avg_session_mins</code></td>
+        <td>Continuous numeric. Isolates casual snackable viewers (< 20m) from cinematic viewers (> 90m).</td>
+      </tr>
+      <tr>
+        <td><strong>Content Preferences</strong></td>
+        <td><code>top_genres</code> (list of strings)</td>
+        <td>Multi-Hot Encoding / TF-IDF genre frequency vector across platform catalog.</td>
+      </tr>
+      <tr>
+        <td><strong>Pattern & Diversity</strong></td>
+        <td><code>genre_diversity_score</code>, <code>weekend_ratio</code></td>
+        <td>Entropy of genre distribution. Differentiates focused niche viewers from generalist explorers.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Optimal Cluster Selection & Cluster Profiles</h3>
+  <p>
+    Arbitrary selection of $K$ is penalized. The pipeline must compute:
+  </p>
+  <ul>
+    <li><strong>Silhouette Coefficient ($s$):</strong> Target $s > 0.40$. Measures how tightly grouped clusters are versus neighboring clusters.</li>
+    <li><strong>Inertia (Within-Cluster Sum of Squares):</strong> Elbow curve computed across $K \in [3, 8]$.</li>
+    <li><strong>Cluster Balance Ratio:</strong> Verify no cluster has $< 5\%$ or $> 60\%$ of user population.</li>
+  </ul>
+
+  <h3>Segment Naming & Recommendation Logic</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Cluster Segment Name</th>
+        <th>Behavioral Signature</th>
+        <th>Recommendation Catalog Strategy</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>High-Engagement Action Viewers</strong></td>
+        <td>High watch time (>30h/wk), high session mins (>80m), Action/Thriller dominance</td>
+        <td>Blockbuster action franchises, high-octane thriller series, 4K HDR releases.</td>
+      </tr>
+      <tr>
+        <td><strong>Casual Short-Session Viewers</strong></td>
+        <td>Low session duration (&lt;25m), frequent visits, Comedy/Shorts</td>
+        <td>Sitcoms, stand-up comedy clips, snackable web series, trending highlights.</td>
+      </tr>
+      <tr>
+        <td><strong>Genre-Explorers</strong></td>
+        <td>High genre diversity (>0.7), medium-to-high watch time, varied categories</td>
+        <td>Eclectic mix: curated indies, award-winning international cinema, docuseries.</td>
+      </tr>
+      <tr>
+        <td><strong>Low-Activity Weekend Viewers</strong></td>
+        <td>Low total watch time (&lt;5h), weekend concentrated, Family/Animation</td>
+        <td>Popular crowd-pleasers, top 10 trending movies, low-friction family viewing.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Section 4: API Contract & Input Validation -->
+  <h2>4. Production API Specification</h2>
+  
+  <div class="grid-2 no-break">
+    <div>
+      <div style="font-weight: 700; color: var(--primary); margin-bottom: 6px;">POST /recommend Request Schema</div>
+      <pre><code>{
+  "user_id": "USR-8192",
+  "watch_time_hours": 32.5,
+  "top_genres": ["Action", "Thriller"],
+  "avg_session_mins": 85.0
+}</code></pre>
+    </div>
+    <div>
+      <div style="font-weight: 700; color: var(--primary); margin-bottom: 6px;">POST /recommend Response Schema (200 OK)</div>
+      <pre><code>{
+  "user_id": "USR-8192",
+  "segment_id": 3,
+  "segment_name": "High-Engagement Action Viewers",
+  "recommendations": ["The Dark Knight", "Inception", "Heat"],
+  "distance_to_centroid": 0.42
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="card no-break">
+    <div class="card-title">GET /health Response Schema (200 OK)</div>
+    <pre style="margin: 0;"><code>{
+  "status": "ok",
+  "model_loaded": true,
+  "version": "1.0.0",
+  "n_clusters": 4
+}</code></pre>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- Section 5: The 10 Critical Edge Cases Matrix -->
+  <h2>5. Evaluator Service & Edge-Case Testing Matrix</h2>
+  <p>The evaluator must run automated integration tests covering the 10 specific edge cases required by the competition:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Edge Case Scenario</th>
+        <th style="width: 35%;">Input Payload Example</th>
+        <th style="width: 40%;">Expected Handling & HTTP Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1. Unknown / Unseen Genre</td>
+        <td><code>{"top_genres": ["SpaceOpera", "UnknownXYZ"]}</code></td>
+        <td>Gracefully ignore unknown genres or map to fallback; return <strong>200 OK</strong>.</td>
+      </tr>
+      <tr>
+        <td>2. Empty Genre List</td>
+        <td><code>{"top_genres": []}</code></td>
+        <td>Default to zero genre vector; cluster by watch time/session metrics; return <strong>200 OK</strong>.</td>
+      </tr>
+      <tr>
+        <td>3. Zero Watch Time</td>
+        <td><code>{"watch_time_hours": 0.0}</code></td>
+        <td>Valid lower bound; categorize into Low-Activity cluster; return <strong>200 OK</strong>.</td>
+      </tr>
+      <tr>
+        <td>4. Extreme Numeric Outlier</td>
+        <td><code>{"watch_time_hours": 999999.0}</code></td>
+        <td>Clip to 99th percentile scaler ceiling; prevent overflow; return <strong>200 OK</strong>.</td>
+      </tr>
+      <tr>
+        <td>5. Missing Required Field</td>
+        <td><code>{"user_id": "USR-1"}</code> (missing watch_time)</td>
+        <td>Pydantic validation rejects payload; return <strong>422 Unprocessable Entity</strong> or 400.</td>
+      </tr>
+      <tr>
+        <td>6. String in Numeric Field</td>
+        <td><code>{"watch_time_hours": "twenty"}</code></td>
+        <td>Reject non-numeric type with clean message; return <strong>422/400 Bad Request</strong>.</td>
+      </tr>
+      <tr>
+        <td>7. Negative Numeric Values</td>
+        <td><code>{"avg_session_mins": -15.0}</code></td>
+        <td>Pydantic <code>ge=0</code> validator catches negative values; return <strong>422/400 Bad Request</strong>.</td>
+      </tr>
+      <tr>
+        <td>8. Idempotency Check</td>
+        <td>Submitting exact same profile 5 times consecutively</td>
+        <td>Verify 100% deterministic output (same segment_id & identical distance); return <strong>200 OK</strong>.</td>
+      </tr>
+      <tr>
+        <td>9. Request Before Model Loads</td>
+        <td>Client fires request before <code>/models/model.pkl</code> loaded</td>
+        <td>API intercepts and returns <strong>503 Service Unavailable</strong> (no crash or stack trace).</td>
+      </tr>
+      <tr>
+        <td>10. Cold Deployment / Missing Volume</td>
+        <td>Container boots with empty <code>/models/</code> directory</td>
+        <td>API health check reports <code>{"status":"degraded","model_loaded":false}</code>; evaluator retries.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Expected metrics.json Format -->
+  <div class="card no-break">
+    <div class="card-title">Required Output: <code>metrics.json</code> Format</div>
+    <pre style="margin: 0;"><code>{
+  "timestamp": "2026-10-05T18:30:00Z",
+  "clustering_metrics": {
+    "optimal_k": 4,
+    "silhouette_score": 0.482,
+    "inertia": 1243.82,
+    "cluster_distribution": {
+      "Cluster_0": {"name": "Casual Short-Session Viewers", "count": 2450, "percentage": 24.5},
+      "Cluster_1": {"name": "High-Engagement Action Viewers", "count": 3100, "percentage": 31.0},
+      "Cluster_2": {"name": "Genre-Explorers", "count": 2250, "percentage": 22.5},
+      "Cluster_3": {"name": "Low-Activity Viewers", "count": 2200, "percentage": 22.0}
+    }
+  },
+  "api_health_metrics": {
+    "health_check_status": 200,
+    "avg_response_time_ms": 4.2,
+    "p99_response_time_ms": 11.8
+  },
+  "edge_case_results": {
+    "total_tested": 10,
+    "passed": 10,
+    "failed": 0
+  }
+}</code></pre>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- Section 6: Marking Scheme & Winning Tactics -->
+  <h2>6. Marking Scheme Breakdown (100 Marks Total)</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 45%;">Grading Component</th>
+        <th style="width: 15%; text-align: center;">Max Marks</th>
+        <th style="width: 40%;">Scoring Strategy / Key Criteria</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>docker compose up clean first run</strong></td>
+        <td style="text-align: center;"><strong>15</strong></td>
+        <td>Zero interactive prompts, zero manual file copies, automatic directory creation, deterministic boot.</td>
+      </tr>
+      <tr>
+        <td><strong>3-Service Architecture & Volume Sharing</strong></td>
+        <td style="text-align: center;"><strong>10</strong></td>
+        <td>Proper microservice decoupling: <code>trainer</code>, <code>api</code>, <code>evaluator</code> using named volumes.</td>
+      </tr>
+      <tr>
+        <td><strong>Healthcheck & Startup Readiness Ordering</strong></td>
+        <td style="text-align: center;"><strong>8</strong></td>
+        <td><code>depends_on</code> conditions (<code>service_completed_successfully</code> for trainer, <code>service_healthy</code> for api).</td>
+      </tr>
+      <tr>
+        <td><strong>Container Hygiene & Security</strong></td>
+        <td style="text-align: center;"><strong>7</strong></td>
+        <td>Lean image tags (<code>python:3.11-slim</code>), non-root execution (<code>USER appuser</code>), pinned requirements.</td>
+      </tr>
+      <tr>
+        <td><strong>API Correctness & Validation</strong></td>
+        <td style="text-align: center;"><strong>10</strong></td>
+        <td>FastAPI Pydantic validators, sanitized error responses without leaking Python stack traces.</td>
+      </tr>
+      <tr>
+        <td><strong>Evaluator Correctness & metrics.json</strong></td>
+        <td style="text-align: center;"><strong>10</strong></td>
+        <td>Independent validation suite that computes real metrics and outputs valid <code>metrics.json</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>Segmentation Quality & Cluster Interpretation</strong></td>
+        <td style="text-align: center;"><strong>10</strong></td>
+        <td>Mathematical justification of K (Silhouette + Elbow curves), domain-meaningful segment naming.</td>
+      </tr>
+      <tr>
+        <td><strong>Reproducibility Across Clean Runs</strong></td>
+        <td style="text-align: center;"><strong>5</strong></td>
+        <td>Fixed <code>random_state=42</code> in model training, standard seeds across NumPy and Scikit-learn.</td>
+      </tr>
+      <tr>
+        <td><strong>REPORT.md Documentation</strong></td>
+        <td style="text-align: center;"><strong>25</strong></td>
+        <td>Addresses all 13 mandatory sections with honesty regarding failed attempts and edge cases.</td>
+      </tr>
+      <tr style="background: #f1f5f9; font-weight: 700;">
+        <td>TOTAL</td>
+        <td style="text-align: center;">100</td>
+        <td>Full-marks target achievable with standardized boilerplate.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Section 7: Suggested 2.5-Hour Execution Schedule -->
+  <h2>7. Suggested 2.5-Hour Execution Plan</h2>
+  <div class="grid-3 no-break">
+    <div class="card">
+      <div style="font-weight: 700; color: var(--primary);">00:00 - 00:20 (20m)</div>
+      <div style="font-size: 11.5px; font-weight: 600; color: var(--dark); margin: 4px 0;">Data & Feature Pipeline</div>
+      <p style="font-size: 11px; margin: 0; color: var(--text-muted);">
+        Inspect raw CSV columns, handle nulls, define numerical & one-hot genre encoders.
+      </p>
+    </div>
+    <div class="card">
+      <div style="font-weight: 700; color: var(--primary);">00:20 - 00:55 (35m)</div>
+      <div style="font-size: 11.5px; font-weight: 600; color: var(--dark); margin: 4px 0;">Clustering & Persistence</div>
+      <p style="font-size: 11px; margin: 0; color: var(--text-muted);">
+        Implement KMeans with silhouette tuning, cluster labeling dict, serialize pipeline to <code>/models</code>.
+      </p>
+    </div>
+    <div class="card">
+      <div style="font-weight: 700; color: var(--primary);">00:55 - 01:30 (35m)</div>
+      <div style="font-size: 11.5px; font-weight: 600; color: var(--dark); margin: 4px 0;">FastAPI & Recommendation</div>
+      <p style="font-size: 11px; margin: 0; color: var(--text-muted);">
+        Build <code>POST /recommend</code> & <code>GET /health</code>, input schemas, rule-based recommendation catalog.
+      </p>
+    </div>
+    <div class="card">
+      <div style="font-weight: 700; color: var(--primary);">01:30 - 02:00 (30m)</div>
+      <div style="font-size: 11.5px; font-weight: 600; color: var(--dark); margin: 4px 0;">Docker & Orchestration</div>
+      <p style="font-size: 11px; margin: 0; color: var(--text-muted);">
+        Write lean Dockerfiles, non-root users, volume mounts, healthcheck, and <code>docker-compose.yml</code>.
+      </p>
+    </div>
+    <div class="card">
+      <div style="font-weight: 700; color: var(--primary);">02:00 - 02:30 (30m)</div>
+      <div style="font-size: 11.5px; font-weight: 600; color: var(--dark); margin: 4px 0;">Evaluator & Edge Cases</div>
+      <p style="font-size: 11px; margin: 0; color: var(--text-muted);">
+        Automated test harness executing the 10 edge cases and generating <code>metrics.json</code>.
+      </p>
+    </div>
+    <div class="card">
+      <div style="font-weight: 700; color: var(--success);">02:30 - 03:00 (30m)</div>
+      <div style="font-size: 11.5px; font-weight: 600; color: var(--dark); margin: 4px 0;">REPORT.md & Polish (25 pts!)</div>
+      <p style="font-size: 11px; margin: 0; color: var(--text-muted);">
+        Complete documentation, verify clean cold-start run, record screenshots/logs, package submission.
+      </p>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- Section 8: Ready-to-Use GitHub Repository Blueprint -->
+  <h2>8. GitHub Repository Blueprint & Directory Layout</h2>
+  <p>
+    Recommended Repository Link / Template:
+    <code>https://github.com/&lt;your-username&gt;/containerized-audience-segmentation-service</code>
+  </p>
+
+  <pre><code>containerized-audience-segmentation-service/
+├── docker-compose.yml          # Orchestrates trainer, api, evaluator
+├── Makefile                    # Optional shortcuts (make up, make test)
+├── README.md                   # Setup guide & quickstart commands
+├── REPORT.md                   # 25-point comprehensive project report
+├── shared_models/              # Mounted volume directory for model persistence
+├── data/
+│   └── user_activity.csv       # Input tabular activity records
+├── trainer/
+│   ├── Dockerfile              # Python 3.11-slim, non-root user
+│   ├── requirements.txt        # pandas, numpy, scikit-learn, joblib
+│   └── train.py                # Preprocessing, KMeans, elbow/silhouette, export
+├── api/
+│   ├── Dockerfile              # Python 3.11-slim, uvicorn
+│   ├── requirements.txt        # fastapi, uvicorn, pydantic, joblib, scikit-learn
+│   ├── main.py                 # FastAPI endpoints (/health, /recommend)
+│   └── recommender.py          # Rule-based catalog & centroid distance logic
+└── evaluator/
+    ├── Dockerfile              # Python 3.11-slim
+    ├── requirements.txt        # requests, pytest
+    ├── evaluate.py             # Healthcheck poller, 10 edge tests, metrics.json generator
+    └── test_cases.json         # Payload definitions for standard & edge inputs</code></pre>
+
+  <h3>Complete docker-compose.yml Specification</h3>
+  <pre><code>version: "3.8"
+
+services:
+  trainer:
+    build:
+      context: ./trainer
+      dockerfile: Dockerfile
+    volumes:
+      - model_volume:/models
+      - ./data:/data:ro
+    environment:
+      - RANDOM_SEED=42
+      - MODEL_PATH=/models/clustering_pipeline.joblib
+      - METADATA_PATH=/models/metadata.json
+    restart: "no"
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - model_volume:/models:ro
+    environment:
+      - MODEL_PATH=/models/clustering_pipeline.joblib
+      - METADATA_PATH=/models/metadata.json
+    depends_on:
+      trainer:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    restart: unless-stopped
+
+  evaluator:
+    build:
+      context: ./evaluator
+      dockerfile: Dockerfile
+    volumes:
+      - ./metrics.json:/app/metrics.json
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: "no"
+
+volumes:
+  model_volume:
+    driver: local</code></pre>
+
+  <!-- Git Push Commands -->
+  <h3>Git Initialization & Push Commands</h3>
+  <pre><code># 1. Initialize Git repository
+git init -b main
+
+# 2. Add files and make initial commit
+git add .
+git commit -m "feat: complete containerized audience segmentation & personalization service"
+
+# 3. Create repository on GitHub and link remote
+git remote add origin https://github.com/&lt;your-username&gt;/containerized-audience-segmentation-service.git
+
+# 4. Push to GitHub
+git push -u origin main</code></pre>
+
+  <!-- Print Notice Footer -->
+  <div style="margin-top: 30px; text-align: center; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 14px;">
+    Generated for Hack Arena Student Hackathon • Ready for PDF Printing via Browser (Ctrl+P / Save as PDF)
+  </div>
+
+</div>
+
+</body>
+</html>
